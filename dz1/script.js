@@ -55,6 +55,7 @@ tableDataElement.insertAdjacentHTML("beforeend", RowOfClassHtml);
 
 
 tableDataElement.addEventListener('click', function (event) {
+
     if (event.target.classList.contains("btn-add")) {
 
         const elementId = event.target.getAttribute("data-id");
@@ -62,19 +63,16 @@ tableDataElement.addEventListener('click', function (event) {
 
         if (classesEl.currentParticipants < classesEl.maxParticipants && classesEl) {
             classesEl.currentParticipants = +classesEl.currentParticipants + 1;
-
             const el = event.target.closest('tr');
-            console.log(el);
             el.innerHTML = getRowOfClass(classesEl);
-            console.log(classesEl);
 
             localStorage.setItem(localStorageKey, JSON.stringify(classes));
             // location.reload();
-
         }
 
         return;
     }
+
     if (event.target.classList.contains("btn-remove")) {
 
         const elementId = event.target.getAttribute("data-id");
@@ -83,9 +81,7 @@ tableDataElement.addEventListener('click', function (event) {
             classesEl.currentParticipants = +classesEl.currentParticipants - 1;
 
             const el = event.target.closest('tr');
-            console.log(el);
             el.innerHTML = getRowOfClass(classesEl);
-            console.log(classesEl);
 
             localStorage.setItem(localStorageKey, JSON.stringify(classes));
             // location.reload();
