@@ -51,18 +51,65 @@ const RowOfClassHtml = classes
 
 const tableDataElement = document.querySelector('.table-data');
 
-tableDataElement.insertAdjacentHTML("beforeend",RowOfClassHtml);
+tableDataElement.insertAdjacentHTML("beforeend", RowOfClassHtml);
+setEventToButtons();
+
+
+
+function handleEventAdd(event) {
+    const elementId = event.target.getAttribute("data-id");
+    const classesEl = classes.find(x => x.id == elementId);
+    if (classesEl) {
+        classesEl.currentParticipants = +classesEl.currentParticipants + 1;
+
+    }
+    localStorage.setItem(localStorageKey, JSON.stringify(classes));
+    localStorage.getItem(localStorageKey)
+    location.reload();
+
+    if (classesEl.currentParticipants >= classesEl.maxParticipants) {
+        console.log('event.target.disabled = true;');
+        event.target.disabled = true;
+        //    выкл
+    }
+    else {
+        console.log('event.target.disabled = false;');
+        event.target.disabled = false;
+    }//вкл
+
+}
+function handleEventRemove(event) {
+    // const elementId = event.target.getAttribute("data-id");
+    // const classesEl = classes.find(x => x.id == elementId);
+    // if (classesEl) {
+    //     classesEl.currentParticipants = +classesEl.currentParticipants - 1;
+    // }
+
+    // // После этого надо перерисовать таблицу
+}
+
+function setEventToButtons() {
+    const arrBtnAdd = document.querySelectorAll('.btn-add');
+    arrBtnAdd.forEach(element => {
+        element.addEventListener("click", (event) => handleEventAdd(event));
+    });
+
+    const arrBtnRemove = document.querySelectorAll('.btn-remove');
+    arrBtnRemove.forEach(element => {
+        element.addEventListener("click", (event) => handleEventRemove(event));
+    });
+}
 
 
 function getRowOfClass(elClass) {
     return `<tbody>
-    <tr>
+    <tr class='tr-container'>
         <td class="table-style">${elClass.name}</td>
         <td class="table-style">${elClass.time}</td>
         <td class="table-style">${elClass.maxParticipants}</td>
         <td class="table-style">${elClass.currentParticipants}</td>
-        <td class="table-style"><button>записаться</button></td>
-        <td class="table-style"><button>отменить запись</button></td>
+        <td class="table-style"><button class="btn-add" data-id=${elClass.id}>записаться</button></td>
+        <td class="table-style"><button class="btn-remove" data-id=${elClass.id}>отменить запись</button></td>
     </tr>
 </tbody>`;
 }
