@@ -52,79 +52,58 @@ const RowOfClassHtml = classes
 const tableDataElement = document.querySelector('.table-data');
 
 tableDataElement.insertAdjacentHTML("beforeend", RowOfClassHtml);
-// setEventToButtons();
 
 
 tableDataElement.addEventListener('click', function (event) {
     if (event.target.classList.contains("btn-add")) {
+
         const elementId = event.target.getAttribute("data-id");
         const classesEl = classes.find(x => x.id == elementId);
-        if (classesEl) {
+
+        if (classesEl.currentParticipants < classesEl.maxParticipants && classesEl) {
             classesEl.currentParticipants = +classesEl.currentParticipants + 1;
 
+            const el = event.target.closest('tr');
+            console.log(el);
+            el.innerHTML = getRowOfClass(classesEl);
+            console.log(classesEl);
+
+            localStorage.setItem(localStorageKey, JSON.stringify(classes));
+            // location.reload();
+
         }
-        localStorage.setItem(localStorageKey, JSON.stringify(classes));
-        localStorage.getItem(localStorageKey)
-        location.reload();
+
         return;
     }
-    // console.log('btn-add');
+    if (event.target.classList.contains("btn-remove")) {
+
+        const elementId = event.target.getAttribute("data-id");
+        const classesEl = classes.find(x => x.id == elementId);
+        if (classesEl.currentParticipants > 0 && classesEl) {
+            classesEl.currentParticipants = +classesEl.currentParticipants - 1;
+
+            const el = event.target.closest('tr');
+            console.log(el);
+            el.innerHTML = getRowOfClass(classesEl);
+            console.log(classesEl);
+
+            localStorage.setItem(localStorageKey, JSON.stringify(classes));
+            // location.reload();
+        }
+
+        return;
+    }
 });
-
-
-// function handleEventAdd(event) {
-//     const elementId = event.target.getAttribute("data-id");
-//     const classesEl = classes.find(x => x.id == elementId);
-//     if (classesEl) {
-//         classesEl.currentParticipants = +classesEl.currentParticipants + 1;
-
-//     }
-//     localStorage.setItem(localStorageKey, JSON.stringify(classes));
-//     localStorage.getItem(localStorageKey)
-//     location.reload();
-
-//     if (classesEl.currentParticipants >= classesEl.maxParticipants) {
-//         console.log('event.target.disabled = true;');
-//         event.target.disabled = true;
-//         //    выкл
-//     }
-//     else {
-//         console.log('event.target.disabled = false;');
-//         event.target.disabled = false;
-//     }//вкл
-
-// }
-// function handleEventRemove(event) {
-//     // const elementId = event.target.getAttribute("data-id");
-//     // const classesEl = classes.find(x => x.id == elementId);
-//     // if (classesEl) {
-//     //     classesEl.currentParticipants = +classesEl.currentParticipants - 1;
-//     // }
-
-//     // // После этого надо перерисовать таблицу
-// }
-
-// function setEventToButtons() {
-//     const arrBtnAdd = document.querySelectorAll('.btn-add');
-//     arrBtnAdd.forEach(element => {
-//         element.addEventListener("click", (event) => handleEventAdd(event));
-//     });
-
-//     const arrBtnRemove = document.querySelectorAll('.btn-remove');
-//     arrBtnRemove.forEach(element => {
-//         element.addEventListener("click", (event) => handleEventRemove(event));
-//     });
-// }
 
 
 function getRowOfClass(elClass) {
     return `<tbody>
     <tr>
-        <td class="table-style">${elClass.name}</td>
-        <td class="table-style">${elClass.time}</td>
-        <td class="table-style">${elClass.maxParticipants}</td>
-        <td class="table-style">${elClass.currentParticipants}</td>
-        <td class="table-style"><button class="btn-add" data-id=${elClass.id}>записаться</button></td>
+        <td class="table-style name" >${elClass.name}</td>
+        <td class="table-style time">${elClass.time}</td>
+        <td class="table-style maxParticipants">${elClass.maxParticipants}</td>
+        <td class="table-style currentParticipants">${elClass.currentParticipants}</td>
+        <td class="table-style"><button class="table-style btn-add" data-id=${elClass.id}>записаться</button></td>
         <td class="table-style"><button class="btn-remove" data-id=${elClass.id}>отменить запись</button></td>
     </tr>
 </tbody>`;
