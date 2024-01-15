@@ -53,16 +53,17 @@ const tableDataElement = document.querySelector('.table-data');
 
 tableDataElement.insertAdjacentHTML("beforeend", RowOfClassHtml);
 
-
 tableDataElement.addEventListener('click', function (event) {
 
-    if (event.target.classList.contains("btn-add")) {
+    const elementId = event.target.getAttribute("data-id");
+    const classesEl = classes.find(x => x.id == elementId);
 
-        const elementId = event.target.getAttribute("data-id");
-        const classesEl = classes.find(x => x.id == elementId);
+    if (event.target.classList.contains("btn-add") && classesEl.currentParticipants !== classesEl.maxParticipants) {
 
-        if (classesEl.currentParticipants < classesEl.maxParticipants && classesEl) {
-            classesEl.currentParticipants = +classesEl.currentParticipants + 1;
+        classesEl.currentParticipants = classesEl.currentParticipants + 1;
+
+        if (classesEl.currentParticipants <= classesEl.maxParticipants && classesEl) {
+
             const el = event.target.closest('tr');
             el.innerHTML = getRowOfClass(classesEl);
 
@@ -73,13 +74,11 @@ tableDataElement.addEventListener('click', function (event) {
         return;
     }
 
-    if (event.target.classList.contains("btn-remove")) {
+    if (event.target.classList.contains("btn-remove") &&classesEl.currentParticipants !== 0) {
 
-        const elementId = event.target.getAttribute("data-id");
-        const classesEl = classes.find(x => x.id == elementId);
-        if (classesEl.currentParticipants > 0 && classesEl) {
-            classesEl.currentParticipants = +classesEl.currentParticipants - 1;
-
+        classesEl.currentParticipants = classesEl.currentParticipants - 1;
+        if (classesEl.currentParticipants >= 0 && classesEl) {
+            
             const el = event.target.closest('tr');
             el.innerHTML = getRowOfClass(classesEl);
 
@@ -99,7 +98,7 @@ function getRowOfClass(elClass) {
         <td class="table-style time">${elClass.time}</td>
         <td class="table-style maxParticipants">${elClass.maxParticipants}</td>
         <td class="table-style currentParticipants">${elClass.currentParticipants}</td>
-        <td class="table-style"><button class="table-style btn-add" data-id=${elClass.id}>записаться</button></td>
+        <td class="table-style"><button class= "btn-add" data-id=${elClass.id}>записаться</button></td>
         <td class="table-style"><button class="btn-remove" data-id=${elClass.id}>отменить запись</button></td>
     </tr>
 </tbody>`;
