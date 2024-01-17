@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .title {
+            text-align: center;
+            color: #d779ee;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 700px;
+            height: 500px;
+            margin: 0 auto;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
+
+        .slider img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .prev-button,
+        .next-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: transparent;
+            border: none;
+            font-size: 60px;
+            color: white;
+            text-shadow:
+                -1px -1px 0 #000,
+                0 -1px 0 #000,
+                1px -1px 0 #000,
+                1px 0 0 #000,
+                1px 1px 0 #000,
+                0 1px 0 #000,
+                -1px 1px 0 #000,
+                -1px 0 0 #000;
+        }
+
+        .prev-button {
+            left: 10px;
+        }
+
+        .next-button {
+            right: 10px;
+        }
+
+        .prev-button:hover,
+        .next-button:hover {
+            color: #d779ee;
+        }
+
+        .dots {
+            position: absolute;
+            left: 0;
+            z-index: 900;
+            width: 100%;
+            bottom: 0;
+        }
+
+        .dot {
+            cursor: pointer;
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border-radius: 50px;
+            margin: 0 0.2em 1em;
+            border: 1px solid grey;
+        }
+
+        .dot:hover,
+        .dot:focus {
+            background: #d779ee;
+        }
+
+        .active {
+            background-color: #521561;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="title">Чудесная весна</h1>
+    <div class="slider-container">
+        <div class="dots">
+            <label class="dot"></label>
+            <label class="dot"></label>
+            <label class="dot"></label>
+            <label class="dot"></label>
+            <label class="dot"></label>
+        </div>
+        <div class="slider">
+            <img src='https://avatars.mds.yandex.net/i?id=f514163b5076e3c7a4d6971f17c3ad3cb442b211-4010175-images-thumbs&n=13'
+                alt='весна1'>
+            <img src='https://avatars.mds.yandex.net/i?id=28b773ea3a7e2e3024e36b0f71d3e83acf6b1313-10814666-images-thumbs&n=13'
+                alt='весна2'>
+            <img src='https://mirpozitiva.ru/wp-content/uploads/2019/11/1478783112_cvety_vesnoi.jpg' alt='весна3'>
+            <img src='https://avatars.mds.yandex.net/i?id=a818850be4b0b811057271d051d2ad93ac1ab1d5-11415951-images-thumbs&n=13'
+                alt='весна4'>
+            <img src='https://mykaleidoscope.ru/x/uploads/posts/2022-09/1663318288_43-mykaleidoscope-ru-p-krasivie-vesennie-otkritki-oboi-51.jpg'
+                alt='весна5'>
+        </div>
+        <button class="prev-button" aria-label="Предыдущий слайд"> &lt; </button>
+        <button class="next-button" aria-label="Следующий слайд"> &gt; </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
