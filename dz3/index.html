@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="script.js" defer></script>
+    <style>
+        #photo-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .photo {
+            flex: 1 1 calc(33.33% - 20px);
+            margin: 10px;
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .photo img {
+            width: 100%;
+            height: auto;
+        }
+
+        .photo-info {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .like-wrapp {
+            display: flex;
+            flex-direction: row;
+            gap: 4px;
+        }
+
+        .like {
+            padding: 10px;
+        }
+
+        .like path:hover {
+            fill: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="photo-container">
+        <!-- <div class="photo">
+            <img src="${item.urls.raw}" alt="${item.alt_description}">
+            <div class="photo-info">
+                <p>Фоторгаф: ${item.user.first_name} ${item.user.last_name ? item.user.last_name: ""}</p>
+                <div class="like-wrapp">
+                    <p class="count-like"></p>
+                    <svg class="like" width="30px" height="30px" viewBox="0 0 12 12" enable-background="new 0 0 12 12" id="Слой_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M8.5,1C7.5206299,1,6.6352539,1.4022217,6,2.0504761C5.3648071,1.4022827,4.4793701,1,3.5,1  C1.5670166,1,0,2.5670166,0,4.5S2,8,6,11c4-3,6-4.5670166,6-6.5S10.4329834,1,8.5,1z" fill="#1D1D1B"/></svg>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</body>
+
+</html>
