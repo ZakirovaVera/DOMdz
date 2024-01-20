@@ -32,30 +32,14 @@ const likeStorage = [];
 // Загрузить фотографии.
 const loadPhotoAsync = async (container) => {
     const response = await fetch(
-        `https://api.unsplash.com/photos?page=${1}&per_page=${20}&client_id=TPMVDCOA9l4-p5LTc6z-trYsNZIByaRJ8GVBt4pCKyI`
+        `https://api.unsplash.com/photos?page=${1}&per_page=${6}&client_id=TPMVDCOA9l4-p5LTc6z-trYsNZIByaRJ8GVBt4pCKyI`
     );
     if (!response.ok) {
         throw new Error("Ошибка получения данных");
     }
     const data = await response.json();
-    // console.log(data);
-    data.forEach((item) =>
-        // container.insertAdjacentHTML(
-        //     "beforeend",
-        //     `
-        //     <div class="photo">
-        //     <img src="${item.urls.raw}" alt="${item.alt_description}">
-        //     <div class="photo-info">
-        //         <p>Фотограф: ${item.user.first_name} ${item.user.last_name ? item.user.last_name : ""}</p>
-        //         <div class="like-wrapp" data-id="${item.id}">
-        //             <p class="count-like">0</p>
-        //             <svg class="like" width="30px" height="30px" viewBox="0 0 12 12" enable-background="new 0 0 12 12" id="Слой_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M8.5,1C7.5206299,1,6.6352539,1.4022217,6,2.0504761C5.3648071,1.4022827,4.4793701,1,3.5,1  C1.5670166,1,0,2.5670166,0,4.5S2,8,6,11c4-3,6-4.5670166,6-6.5S10.4329834,1,8.5,1z" fill="#1D1D1B"/></svg>
-        //         </div>
-        //     </div>
-        // </div>
-        //   `
-        // )
-
+    data.forEach((item) => {
+        const countLike = getCountLike(item.id);
         container.insertAdjacentHTML(
             "beforeend",
             `
@@ -64,13 +48,14 @@ const loadPhotoAsync = async (container) => {
             <div class="photo-info">
                 <p>Фотограф: ${item.user.first_name} ${item.user.last_name ? item.user.last_name : ""}</p>
                 <div class="like-wrapp" data-id="${item.id}">
-                    ${getHtmlLike(item.id)}
+                    <p class="count-like">${countLike}</p>
+                    <svg class="like" width="30px" height="30px" viewBox="0 0 12 12" enable-background="new 0 0 12 12" id="Слой_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M8.5,1C7.5206299,1,6.6352539,1.4022217,6,2.0504761C5.3648071,1.4022827,4.4793701,1,3.5,1  C1.5670166,1,0,2.5670166,0,4.5S2,8,6,11c4-3,6-4.5670166,6-6.5S10.4329834,1,8.5,1z" fill="#1D1D1B"/></svg>
                 </div>
             </div>
         </div>
           `
         )
-    );
+    });
 }
 
 // Увеличить счетчик лайков.
@@ -81,8 +66,6 @@ const addLike = (photoId) => {
     else {
         likeStorage[photoId] += 1;
     }
-
-    console.log(likeStorage[photoId]);
 }
 
 const getCountLike = (photoId) => {
@@ -93,29 +76,7 @@ const getCountLike = (photoId) => {
     else {
         countLike = likeStorage[photoId];
     }
-
-    // console.log(photoId);
-    // console.log(countLike);
     return countLike;
-}
-
-const getHtmlLike = (photoId) => {
-    const countLike = getCountLike(photoId);
-
-    const getClassLike = (countLike) => {
-        if (countLike < 1) {
-            return "like";
-        }
-
-        return "active__like";
-    }
-
-    const html = `
-        <p class="count-like">${countLike}</p>
-        <svg class="${getClassLike(countLike)}" width="30px" height="30px" viewBox="0 0 12 12" enable-background="new 0 0 12 12" id="Слой_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M8.5,1C7.5206299,1,6.6352539,1.4022217,6,2.0504761C5.3648071,1.4022827,4.4793701,1,3.5,1  C1.5670166,1,0,2.5670166,0,4.5S2,8,6,11c4-3,6-4.5670166,6-6.5S10.4329834,1,8.5,1z" fill="#1D1D1B"/></svg>
-    `;
-
-    return html;
 }
 
 // Обработчик клика лайк
@@ -127,8 +88,17 @@ const clickLikeEventHandler = (e) => {
 
     const photoId = divLikeWrapp.getAttribute('data-id');
     addLike(photoId);
+    const countLike = getCountLike(photoId);
 
-    divLikeWrapp.innerHTML = getHtmlLike(photoId);
+    const svgEl = e.target.closest('path');
+    if (countLike > 0 && svgEl !== null) {
+        svgEl.style.fill = "red";
+
+    }
+    const countEl = divLikeWrapp.querySelector('.count-like');
+    if (countEl !== null) {
+        countEl.textContent = countLike;
+    }
 }
 
 // Установить событие КликЛайка для фотографий.
@@ -141,7 +111,6 @@ async function initComponentsPhotoAsync(containerToLoadPhoto) {
     await loadPhotoAsync(containerToLoadPhoto);
     addEventLike(containerToLoadPhoto);
 }
-
 
 const containerToLoadPhoto = document.querySelector('#photo-container');
 initComponentsPhotoAsync(containerToLoadPhoto);
