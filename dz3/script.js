@@ -38,8 +38,24 @@ const loadPhotoAsync = async (container) => {
         throw new Error("Ошибка получения данных");
     }
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     data.forEach((item) =>
+        // container.insertAdjacentHTML(
+        //     "beforeend",
+        //     `
+        //     <div class="photo">
+        //     <img src="${item.urls.raw}" alt="${item.alt_description}">
+        //     <div class="photo-info">
+        //         <p>Фотограф: ${item.user.first_name} ${item.user.last_name ? item.user.last_name : ""}</p>
+        //         <div class="like-wrapp" data-id="${item.id}">
+        //             <p class="count-like">0</p>
+        //             <svg class="like" width="30px" height="30px" viewBox="0 0 12 12" enable-background="new 0 0 12 12" id="Слой_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M8.5,1C7.5206299,1,6.6352539,1.4022217,6,2.0504761C5.3648071,1.4022827,4.4793701,1,3.5,1  C1.5670166,1,0,2.5670166,0,4.5S2,8,6,11c4-3,6-4.5670166,6-6.5S10.4329834,1,8.5,1z" fill="#1D1D1B"/></svg>
+        //         </div>
+        //     </div>
+        // </div>
+        //   `
+        // )
+
         container.insertAdjacentHTML(
             "beforeend",
             `
@@ -47,9 +63,8 @@ const loadPhotoAsync = async (container) => {
             <img src="${item.urls.raw}" alt="${item.alt_description}">
             <div class="photo-info">
                 <p>Фотограф: ${item.user.first_name} ${item.user.last_name ? item.user.last_name : ""}</p>
-                <div class="like-wrapp">
-                    <p class="count-like">0</p>
-                    <svg class="like" width="30px" height="30px" viewBox="0 0 12 12" enable-background="new 0 0 12 12" id="Слой_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M8.5,1C7.5206299,1,6.6352539,1.4022217,6,2.0504761C5.3648071,1.4022827,4.4793701,1,3.5,1  C1.5670166,1,0,2.5670166,0,4.5S2,8,6,11c4-3,6-4.5670166,6-6.5S10.4329834,1,8.5,1z" fill="#1D1D1B"/></svg>
+                <div class="like-wrapp" data-id="${item.id}">
+                    ${getHtmlLike(item.id)}
                 </div>
             </div>
         </div>
@@ -58,17 +73,67 @@ const loadPhotoAsync = async (container) => {
     );
 }
 
-// Установить событие КликЛайка для фотографий.
-const addEventLike = (containerPhoto) => {
-    containerPhoto.addEventListener('click', function (e) {
-        const divLikeWrapp = e.target.closest(".like-wrapp");
-        if (divLikeWrapp == null) {
-            return;
+// Увеличить счетчик лайков.
+const addLike = (photoId) => {
+    if (typeof (likeStorage[photoId]) == "undefined" && likeStorage[photoId] == null) {
+        likeStorage[photoId] = 1;
+    }
+    else {
+        likeStorage[photoId] += 1;
+    }
+
+    console.log(likeStorage[photoId]);
+}
+
+const getCountLike = (photoId) => {
+    let countLike = 0;
+    if (typeof (likeStorage[photoId]) == "undefined" && likeStorage[photoId] == null) {
+        countLike = 0;
+    }
+    else {
+        countLike = likeStorage[photoId];
+    }
+
+    // console.log(photoId);
+    // console.log(countLike);
+    return countLike;
+}
+
+const getHtmlLike = (photoId) => {
+    const countLike = getCountLike(photoId);
+
+    const getClassLike = (countLike) => {
+        if (countLike < 1) {
+            return "like";
         }
 
-        const photoId = divLikeWrapp.getAttribute('data-id');
-        console.log(divLikeWrapp);
-    });
+        return "active__like";
+    }
+
+    const html = `
+        <p class="count-like">${countLike}</p>
+        <svg class="${getClassLike(countLike)}" width="30px" height="30px" viewBox="0 0 12 12" enable-background="new 0 0 12 12" id="Слой_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M8.5,1C7.5206299,1,6.6352539,1.4022217,6,2.0504761C5.3648071,1.4022827,4.4793701,1,3.5,1  C1.5670166,1,0,2.5670166,0,4.5S2,8,6,11c4-3,6-4.5670166,6-6.5S10.4329834,1,8.5,1z" fill="#1D1D1B"/></svg>
+    `;
+
+    return html;
+}
+
+// Обработчик клика лайк
+const clickLikeEventHandler = (e) => {
+    const divLikeWrapp = e.target.closest(".like-wrapp");
+    if (divLikeWrapp == null) {
+        return;
+    }
+
+    const photoId = divLikeWrapp.getAttribute('data-id');
+    addLike(photoId);
+
+    divLikeWrapp.innerHTML = getHtmlLike(photoId);
+}
+
+// Установить событие КликЛайка для фотографий.
+const addEventLike = (containerPhoto) => {
+    containerPhoto.addEventListener('click', clickLikeEventHandler);
 }
 
 // Инициализировать компоненты фотографий.
